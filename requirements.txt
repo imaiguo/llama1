@@ -2,3 +2,8 @@ torch
 fairscale
 fire
 sentencepiece
+jupyter
+transformers
+protobuf
+accelerate
+llama2_wrapper

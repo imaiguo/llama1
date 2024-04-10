@@ -1,62 +1,45 @@
-# LLaMA 
 
-This repository is intended as a minimal, hackable and readable example to load [LLaMA](https://ai.facebook.com/blog/large-language-model-llama-meta-ai/) ([arXiv](https://arxiv.org/abs/2302.13971v1)) models and run inference.
-In order to download the checkpoints and tokenizer, fill this [google form](https://forms.gle/jk851eBVbX1m5TAv5)
+# LLAMA2
 
-## Setup
+## Windows环境部署
 
-In a conda env with pytorch / cuda available, run:
-```
-pip install -r requirements.txt
-```
-Then in this repository:
-```
-pip install -e .
+ 准备独立的python环境
+
+```bash
+> cmd
+> cd /opt/Data/PythonVenv
+> python3 -m venv llama1
+> source /opt/Data/PythonVenv/llama1/bin/activate
 ```
 
-## Download
+部署推理环境
 
-Once your request is approved, you will receive links to download the tokenizer and model files.
-Edit the `download.sh` script with the signed url provided in the email to download the model weights and tokenizer.
-
-## Inference
-
-The provided `example.py` can be run on a single or multi-gpu node with `torchrun` and will output completions for two pre-defined prompts. Using `TARGET_FOLDER` as defined in `download.sh`:
-```
-torchrun --nproc_per_node MP example.py --ckpt_dir $TARGET_FOLDER/model_size --tokenizer_path $TARGET_FOLDER/tokenizer.model
+```bash
+> pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+> pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
 
-Different models require different MP values:
+## 模型参数格式转换
 
-|  Model | MP |
-|--------|----|
-| 7B     | 1  |
-| 13B    | 2  |
-| 33B    | 4  |
-| 65B    | 8  |
+bfb16转fb16 [pytorch训练格式 -> hugging face格式]
 
-## FAQ
-
-- [1. The download.sh script doesn't work on default bash in MacOS X](FAQ.md#1)
-- [2. Generations are bad!](FAQ.md#2)
-- [3. CUDA Out of memory errors](FAQ.md#3)
-- [4. Other languages](FAQ.md#4)
-
-## Reference
-
-LLaMA: Open and Efficient Foundation Language Models -- https://arxiv.org/abs/2302.13971
-
-```
-@article{touvron2023llama,
-  title={LLaMA: Open and Efficient Foundation Language Models},
-  author={Touvron, Hugo and Lavril, Thibaut and Izacard, Gautier and Martinet, Xavier and Lachaux, Marie-Anne and Lacroix, Timoth{\'e}e and Rozi{\`e}re, Baptiste and Goyal, Naman and Hambro, Eric and Azhar, Faisal and Rodriguez, Aurelien and Joulin, Armand and Grave, Edouard and Lample, Guillaume},
-  journal={arXiv preprint arXiv:2302.13971},
-  year={2023}
-}
+```bash
+>
+> python tools/convert_llama_weights_to_hf.py --input_dir /opt/Data/ModelWeight/meta/llama1/ --model_size 7B --output_dir /opt/Data/ModelWeight/meta/llama1.hf/llama1-7b-hf
+> python tools/convert_llama_weights_to_hf.py --input_dir /opt/Data/ModelWeight/meta/llama1/ --model_size 13B --output_dir /opt/Data/ModelWeight/meta/llama1.hf/llama1-13b-hf
+>
 ```
 
-## Model Card
-See [MODEL_CARD.md](MODEL_CARD.md)
+## 模型生成
 
-## License
-See the [LICENSE](LICENSE) file.
+```bash
+> torchrun --nproc_per_node MP example.py --ckpt_dir /opt/Data/ModelWeight/meta/llama1/7B --tokenizer_path /opt/Data/ModelWeight/meta/llama1/tokenizer.model
+>
+> torchrun example.py --ckpt_dir /opt/Data/ModelWeight/meta/llama1/7B --tokenizer_path /opt/Data/ModelWeight/meta/llama1/tokenizer.model
+```
+
+启动服务
+```bash
+> jupyter notebook --no-browser --port 7001 --ip=192.168.2.198
+> jupyter notebook --no-browser --port 7000 --ip=192.168.2.200
+```
