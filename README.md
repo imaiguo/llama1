@@ -30,7 +30,7 @@ bfb16转fb16 [pytorch训练格式 -> hugging face格式]
 >
 ```
 
-## 模型生成
+## 文本生成
 
 ```bash
 > torchrun --nproc_per_node MP example.py --ckpt_dir /opt/Data/ModelWeight/meta/llama1/7B --tokenizer_path /opt/Data/ModelWeight/meta/llama1/tokenizer.model
@@ -39,6 +39,12 @@ bfb16转fb16 [pytorch训练格式 -> hugging face格式]
 ```
 
 启动服务
+```bash
+> python WebGradio/WebGradioAutoModelZiya.py
+>
+```
+
+启动丘比特
 ```bash
 > jupyter notebook --no-browser --port 7001 --ip=192.168.2.198
 > jupyter notebook --no-browser --port 7000 --ip=192.168.2.200

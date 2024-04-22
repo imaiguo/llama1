@@ -7,3 +7,5 @@ transformers
 protobuf
 accelerate
 llama2_wrapper
+loguru
+gradio==4.21.0
