@@ -1,5 +1,10 @@
 
-# LLAMA2
+# LLAMA1
+
+Llama1 Content Length: 2K
+Llama2 Content Length: 4K
+Llama3 Content Length: 8K
+
 
 ## Windows环境部署
 
